@@ -45,33 +45,41 @@ module.exports = function solveSudoku(matrix) {
 /////////////////////////////Решаем. Взять элемент и определить позицию.
 
         // Получить всю строку пустого элемента.
-        let string = []; // Сюда будем писать всю строку пустого элемента.
-        let column = []; // Сюда будем писать весь столбец пустого элемента.
-        let suitablePositions = 0;
-        if (positionElements.length > 0) { // Если есть пустые элементы.
+        for (let im = 0; im < itemsMissing.length; im++) { // Пока есть цифры для вставки.
 
-            for (let m = 0; m < positionElements.length; m++) { // Пока есть пустые элементы.
-                string = matrix[positionElements[m][1]]; // Строка нулевого (пустого) элемента.
+            if (positionElements.length > 0) { // Если есть пустые элементы.
 
-                for (let ma = 0; ma < matrix.length; ma++) {
-                    column.push(matrix[ma][positionElements[m][0]]); // Столбец нулевого (пустого) элемента.
-                }
+                let suitablePositions = [];
 
-                for (let im = 0; itemsMissing < Things.length; im++) {
-                    if (string.indexOf(itemsMissing[im]) != -1 && column.indexOf(itemsMissing[im]) != -1){
-                        suitablePositions++; // Если в строке и столбце такого элемента больше нету, то отметить
-                    } // что, есть подходящее место для вставки, для дальнейшей проверки одно ли такое место.
-                }
-            }
+                for (let m = 0; m < positionElements.length; m++) { // Пока есть пустые элементы.
+
+                    let string = []; // Сюда будем писать всю строку пустого элемента.
+                    let column = []; // Сюда будем писать весь столбец пустого элемента.
+                    string = matrix[positionElements[m][1]]; // Строка нулевого (пустого) элемента.
+
+                    for (let ma = 0; ma < matrix.length; ma++) {
+                        column.push(matrix[ma][positionElements[m][0]]); // Столбец нулевого (пустого) элемента.
+                    };
+
+                    if (string.indexOf(itemsMissing[im]) == -1 && column.indexOf(itemsMissing[im]) == -1){
+                        suitablePositions.push(positionElements[m]);
+                        suitablePositions.push(m); // Если в строке и столбце такогой цифры
+                    } // больше нету, то записать в 'suitablePositions' позицию для возможной записи.
+
+                    if ((m < positionElements.length - 1) == false) { // Если пустых позиций больше нет.
+                        if (suitablePositions.length == 2) {
+                            matrix[suitablePositions[0][1]][suitablePositions[0][0]] = itemsMissing[im];
+                            positionElements.splice(suitablePositions[1], 1);
+                        }
+                    } else {
+                        continue;
+                    }
+                };
+                // Сюда выйдет после проверки всех пустых мест на возможность вставки
+                // очередной цифры 'itemsMissing'.
+
+            };
         };
-
-
-
-
-        for (let p = 0; p < itemsMissing.length; p++) {
-            console.log(positionElements[itemsMissing[p]]);
-        }
-
 
 
         if (itemsMissing == 0) {  //Если все элементы малого квадрата 3х3 заполнены, то добавить его номер,
@@ -79,12 +87,6 @@ module.exports = function solveSudoku(matrix) {
         }
 
 
-
-
-
-
-        console.log(square);
-        console.log(itemsMissing);
         if (offsetX == 6 && offsetY == 0) {  // Если конец первой строки, то перейти на начало второй.
             offsetX = 0;
             offsetY += 3;
@@ -96,6 +98,6 @@ module.exports = function solveSudoku(matrix) {
         }
 
     }
-    console.log(amountFullSquares.length);
+    return(matrix);
 
 };
