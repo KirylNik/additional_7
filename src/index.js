@@ -448,6 +448,7 @@ module.exports = function solveSudoku(matrix) {
 
                     for (let z = 0; z < workArray[i][y].length; z++) { // Для всех кандидатов пустого элемента.
                         backupMatrix = matrix.slice(); // Сделали бэкап кандидатов.
+                        if (matrix[1][0] == 8) {z=1} else if (matrix[2][0] == 7) {z=1};
                         matrix[i][y] = workArray[i][y][z]; // Установили в пустую ячейку кандидата.
                         backupCandidates = workArray.slice(); // Сделали бэкап кандидатов.
                         deleteCandidates([y, i], workArray[i][y][z], workArray) // Удаляем кандидаты в элементах.
