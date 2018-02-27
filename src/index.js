@@ -431,30 +431,46 @@ module.exports = function solveSudoku(matrix) {
                 };
             };
 ////////////////////////////////////////////////////////////////
-            return(matrix, amountFullSquares.length);
+
+            return(matrix);
         };
     };
     // Функция, которая устанавдивает в перый пустойэлемент возможные кандидаты и смотрит, заполится ли судоку.
     function substitutionSudoku(matrix, workArray) {
         let emptyPosition = []; // Позиция пустого элемента.
         let backupCandidates = []; // Резервная копия кандидатов.
-        let amountFullSquares = 0;
+        let backupMatrix = []; // Резервная копия кандидатов.
         for (let i = 0; i < workArray.length; i++) {
             for (let y = 0; y < workArray[i].length; y++) {
                 if (workArray[i][y].length != 0) {
                     emptyPosition.push(i); // Позиция пустого элемента по оси X.
                     emptyPosition.push(y); // Позиция пустого элемента по оси Y.
 
-                    for (let z = 1; z < workArray[i][y].length; z++) { // Для всех кандидатов пустого элемента.
+                    for (let z = 0; z < workArray[i][y].length; z++) { // Для всех кандидатов пустого элемента.
+                        backupMatrix = matrix.slice(); // Сделали бэкап кандидатов.
                         matrix[i][y] = workArray[i][y][z]; // Установили в пустую ячейку кандидата.
-                        backupCandidates = workArray.slice();; // Сделали бэкап кандидатов.
+                        backupCandidates = workArray.slice(); // Сделали бэкап кандидатов.
                         deleteCandidates([y, i], workArray[i][y][z], workArray) // Удаляем кандидаты в элементах.
                         superSudoku (matrix, workArray);
-                        if (amountFullSquares !=9) {
+                        let fullFlag = 1;
+                        for (let ms = 0; ms < 9; ms++) {
+                            for (let me = 0; me < 9; me++) {
+                                if (matrix[ms][me] == 0) {
+                                    fullFlag = 0;
+                                }
+                            };
+                        };
+                        if (fullFlag == 0) {
                             console.log(matrix);
-                            substitutionSudoku(matrix, workArray);
-                            console.log(matrix);
+                            matrix = backupMatrix.slice();
+                            workArray = backupCandidates.slice();
+                        } else if (fullFlag == 1) {
+
+
+                            console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+                            break;
                         }
+
                     }
                 }
             }
